@@ -13,7 +13,7 @@ class Train
   end
 
   def attach_unhook_wagon(wagon_action)
-    return if @speed.zero?
+    return unless @speed.zero?
 
     if wagon_action == 'attach'
       @total_num_wagons += 1
