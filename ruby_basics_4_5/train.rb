@@ -7,15 +7,15 @@ require_relative 'instance_counter'
 class Train
   include ManufacturingCompany
   include InstanceCounter
-  @@all_trains_created = []
+  @@trains = []
 
   class << self
     def all
-      @@all_trains_created
+      @@trains
     end
 
     def find(train_number)
-      @@all_trains_created.select { |train| train.number == train_number }.last
+      @@trains.select { |train| train.number == train_number }.last
     end
   end
 
@@ -26,7 +26,7 @@ class Train
     @type = type
     @wagons = []
     @speed = 0
-    self.class.all << self
+    @@trains << self
     register_instance
   end
 

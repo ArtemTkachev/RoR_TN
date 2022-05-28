@@ -5,15 +5,15 @@ require_relative 'instance_counter'
 # class Route
 class Route
   include InstanceCounter
-  @@all_routes_created = []
+  @@routes = []
 
   class << self
     def all
-      @@all_routes_created
+      @@routes
     end
 
     def find(route_number)
-      @@all_routes_created.select { |route| route.number == route_number }.last
+      @@routes.select { |route| route.number == route_number }.last
     end
   end
 
@@ -24,7 +24,7 @@ class Route
     @stations = []
     @stations << start_station
     @stations << end_station
-    self.class.all << self
+    @@routes << self
     register_instance
   end
 

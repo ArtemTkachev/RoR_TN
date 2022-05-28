@@ -5,15 +5,15 @@ require_relative 'instance_counter'
 # class Station
 class Station
   include InstanceCounter
-  @@all_stations_created = []
+  @@stations = []
 
   class << self
     def all
-      @@all_stations_created
+      @@stations
     end
 
     def find(station_name)
-      @@all_stations_created.select { |station| station.name == station_name }.last
+      @@stations.select { |station| station.name == station_name }.last
     end
   end
 
@@ -22,7 +22,7 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
-    self.class.all << self
+    @@stations << self
     register_instance
   end
 
