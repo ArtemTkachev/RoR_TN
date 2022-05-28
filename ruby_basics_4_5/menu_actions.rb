@@ -9,15 +9,9 @@ require_relative 'passenger_train'
 
 # class MenuActions
 class MenuActions
-  def initialize
-    @stations = []
-    @trains = []
-    @routes = []
-  end
-
   def create_station
     print 'Enter the station name: '
-    add_station(Station.new(gets.chomp))
+    Station.new(gets.chomp)
     puts 'The station has been successfully created!'
   end
 
@@ -27,8 +21,8 @@ class MenuActions
     print 'Enter the train type (passenger or cargo): '
     train_type = gets.chomp
     case train_type
-    when 'passenger' then add_train(PassengerTrain.new(train_number))
-    when 'cargo' then add_train(CargoTrain.new(train_number))
+    when 'passenger' then PassengerTrain.new(train_number)
+    when 'cargo' then CargoTrain.new(train_number)
     end
     puts 'The train has been successfully created!'
   end
@@ -44,7 +38,7 @@ class MenuActions
     end_station = find_station(gets.chomp)
     return if end_station.nil?
 
-    add_route(Route.new(route_number, start_station, end_station))
+    Route.new(route_number, start_station, end_station)
     puts 'The route has been successfully created!'
   end
 
@@ -150,36 +144,22 @@ class MenuActions
   # methods are only used inside an instance
   protected
 
-  attr_reader :stations, :trains, :routes
-
-  def add_station(station)
-    @stations << station
-  end
-
-  def add_train(train)
-    @trains << train
-  end
-
-  def add_route(route)
-    @routes << route
-  end
-
   def find_train(number)
-    train = trains.select { |train_in| train_in.number == number }.last
+    train = Train.find(number)
     return train unless train.nil?
 
     puts 'There is NO train with this number'
   end
 
   def find_route(number)
-    route = routes.select { |route_in| route_in.number == number }.last
+    route = Route.find(number)
     return route unless route.nil?
 
     puts 'There is NO route with this number'
   end
 
   def find_station(name)
-    station = stations.select { |station_in| station_in.name == name }.last
+    station = Station.find(name)
     return station unless station.nil?
 
     puts 'There is NO station with this name'

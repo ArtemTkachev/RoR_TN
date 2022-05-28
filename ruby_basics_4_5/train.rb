@@ -1,7 +1,24 @@
 # frozen_string_literal: true
 
+require_relative 'manufacturing_company'
+require_relative 'instance_counter'
+
 # class Train
 class Train
+  include ManufacturingCompany
+  include InstanceCounter
+  @@all_trains_created = []
+
+  class << self
+    def all
+      @@all_trains_created
+    end
+
+    def find(train_number)
+      @@all_trains_created.select { |train| train.number == train_number }.last
+    end
+  end
+
   attr_reader :number, :type, :wagons
 
   def initialize(number, type)
@@ -9,6 +26,8 @@ class Train
     @type = type
     @wagons = []
     @speed = 0
+    self.class.all << self
+    register_instance
   end
 
   def unhook_wagon(wagon)

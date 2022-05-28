@@ -1,12 +1,29 @@
 # frozen_string_literal: true
 
+require_relative 'instance_counter'
+
 # class Station
 class Station
+  include InstanceCounter
+  @@all_stations_created = []
+
+  class << self
+    def all
+      @@all_stations_created
+    end
+
+    def find(station_name)
+      @@all_stations_created.select { |station| station.name == station_name }.last
+    end
+  end
+
   attr_reader :name, :trains
 
   def initialize(name)
     @name = name
     @trains = []
+    self.class.all << self
+    register_instance
   end
 
   def arrival_train(train)
