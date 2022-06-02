@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'instance_counter'
+require_relative '../lib/instance_counter'
 
 # class Route
 class Route
   include InstanceCounter
   @@routes = []
+
+  ROUTE_NUMBER_FORMAT = /^\d{1,3}[A-Z]{1}$/.freeze
 
   class << self
     def all
@@ -24,6 +26,7 @@ class Route
     @stations = []
     @stations << start_station
     @stations << end_station
+    validate!
     @@routes << self
     register_instance
   end
@@ -38,5 +41,15 @@ class Route
 
   def show_stations
     stations.each { |station| puts station.name }
+  end
+
+  protected
+
+  def validate!
+    errors = []
+    errors << 'Invalid route number!' if number !~ ROUTE_NUMBER_FORMAT
+    errors << 'The start station is not set!' if @stations.first.nil?
+    errors << 'The end station is not set!' if @stations.last.nil?
+    raise errors.join('.') unless errors.empty?
   end
 end

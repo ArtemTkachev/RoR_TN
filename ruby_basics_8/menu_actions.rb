@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'route'
-require_relative 'train'
-require_relative 'station'
-require_relative 'wagon'
-require_relative 'cargo_train'
-require_relative 'passenger_train'
+require_relative './models/route'
+require_relative './models/train'
+require_relative './models/station'
+require_relative './models/wagon'
+require_relative './models/passenger_wagon'
+require_relative './models/cargo_wagon'
+require_relative './models/cargo_train'
+require_relative './models/passenger_train'
 
 # class MenuActions
 class MenuActions
@@ -18,13 +20,19 @@ class MenuActions
   def create_train
     print 'Enter the train number: '
     train_number = gets.chomp
-    print 'Enter the train type (passenger or cargo): '
-    train_type = gets.chomp
-    case train_type
-    when 'passenger' then PassengerTrain.new(train_number)
-    when 'cargo' then CargoTrain.new(train_number)
+    puts 'Enter the train type number'
+    Train::TRAIN_TYPE.each_with_index { |type, index| puts "#{index + 1} #{type}" }
+    print ': '
+    case gets.chomp
+    when '1' then PassengerTrain.new(train_number)
+    when '2' then CargoTrain.new(train_number)
+    else
+      raise 'Invalid train type!'
     end
     puts 'The train has been successfully created!'
+  rescue RuntimeError => e
+    puts "The train was not added. #{e.message}"
+    retry
   end
 
   def create_route
@@ -43,13 +51,9 @@ class MenuActions
   end
 
   def add_remove_intermediate_station(action)
-    print 'Enter the route number: '
-    route = find_route(gets.chomp)
-    return if route.nil?
-
-    print 'Enter the station name: '
-    station = find_station(gets.chomp)
-    return if station.nil?
+    route = route_data_entry
+    station = station_data_entry
+    return if route.nil? || station.nil?
 
     station_on_route = find_station_on_route?(station, route)
     case action
@@ -75,28 +79,31 @@ class MenuActions
   end
 
   def assign_route
-    print 'Enter the train number: '
-    train = find_train(gets.chomp)
-    return if train.nil?
-
-    print 'Enter the route number: '
-    route = find_route(gets.chomp)
-    return if route.nil?
+    route = route_data_entry
+    train = train_data_entry
+    return if route.nil? || train.nil?
 
     train.take_route(route)
     puts 'The route assigned to the train!'
   end
 
   def add_unhook_wagon(action)
-    print 'Enter the train number: '
-    train = find_train(gets.chomp)
+    train = train_data_entry
     return if train.nil?
 
     print 'Enter the wagon number: '
     wagon_number = gets.chomp
     case action
     when 'add'
-      train.attach_wagon(Wagon.new(wagon_number, train.type))
+      case train.type
+      when 'cargo'
+        print 'Enter the total volume in cubic meters: '
+        wagon = CargoWagon.new(wagon_number, gets.chomp.to_i)
+      when 'passenger'
+        print 'Enter the total number of seats: '
+        wagon = PassengerWagon.new(wagon_number, gets.chomp.to_i)
+      end
+      train.attach_wagon(wagon)
       puts 'The wagon is attached to the train!'
     when 'unhook'
       wagon = train.wagons.select { |wagon_in| wagon_in.number == wagon_number }.last
@@ -109,9 +116,33 @@ class MenuActions
     end
   end
 
+  def view_wagons
+    train = train_data_entry
+    return if train.nil?
+
+    puts 'Wagons:'
+    train.each_wagon do |wagon|
+      print "№:#{wagon.number} type:#{wagon.type} "
+      puts "#{wagon.type == 'pass' ? 'seats' : 'volume'} free & occupied:'#{wagon.free} #{wagon.occupied}"
+    end
+  end
+
+  def occupy_seat_volume
+    train = train_data_entry
+    return if train.nil?
+
+    wagon = choose_wagon(train)
+    case train.type
+    when 'cargo'
+      print 'Enter the loaded volume in cubic meters: '
+      wagon.occupy(gets.chomp.to_i)
+    when 'passenger'
+      wagon.occupy
+    end
+  end
+
   def train_moving
-    print 'Enter the train number: '
-    train = find_train(gets.chomp)
+    train = train_data_entry
     return if train.nil?
 
     print 'Enter the direction (forward or backward): '
@@ -124,8 +155,7 @@ class MenuActions
   end
 
   def view_stations
-    print 'Enter the route number: '
-    route = find_route(gets.chomp)
+    route = route_data_entry
     return if route.nil?
 
     puts 'Stations:'
@@ -133,12 +163,13 @@ class MenuActions
   end
 
   def view_trains
-    print 'Enter the station name: '
-    station = find_station(gets.chomp)
+    station = station_data_entry
     return if station.nil?
 
     puts 'Trains:'
-    station.show_trains
+    station.each_train do |train|
+      puts "№#{train.number} type:#{train.type} number of wagons:#{train.wagons.size}"
+    end
   end
 
   # methods are only used inside an instance
@@ -167,5 +198,34 @@ class MenuActions
 
   def find_station_on_route?(station, route)
     route.stations.include?(station)
+  end
+
+  def choose_wagon(train)
+    puts 'Wagons:'
+    train.wagons.each_with_index { |wagon, index| puts "#{index + 1} - ##{wagon.number} #{wagon.total} #{wagon.free}" }
+    begin
+      print 'Enter the serial number of wagon (1,2,3,..): '
+      number = gets.chomp.to_i
+      raise "This's not the serial number of the wagon!" unless number.between(1..train.wagons.size)
+    rescue RuntimeError => e
+      puts e.message
+      retry
+    end
+    train.wagons[number - 1]
+  end
+
+  def train_data_entry
+    print 'Enter the train number: '
+    find_train(gets.chomp)
+  end
+
+  def route_data_entry
+    print 'Enter the route number: '
+    find_route(gets.chomp)
+  end
+
+  def station_data_entry
+    print 'Enter the station name: '
+    find_station(gets.chomp)
   end
 end

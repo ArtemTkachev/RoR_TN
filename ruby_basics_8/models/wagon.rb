@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../manufacturing_company'
+require_relative '../lib/manufacturing_company'
 
 # class Wagon
 class Wagon

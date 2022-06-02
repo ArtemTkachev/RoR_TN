@@ -13,10 +13,12 @@ loop do
     6 Assign a route to a train
     7 Add a wagon to a train
     8 Unhook a wagon from a train
-    9 Move a train (forward or backward)
-    10 View a list of stations on a route
-    11 View a list of trains at a station
-    12 Exit"
+    9 Occupy_seat_volume
+    10 View a list of wagons at a train
+    11 Move a train (forward or backward)
+    12 View a list of stations on a route
+    13 View a list of trains at a station
+    14 Exit"
   print 'Enter the number of the menu item: '
 
   answer = gets.chomp.to_i
@@ -29,9 +31,11 @@ loop do
   when 6 then menu_actions.assign_route
   when 7 then menu_actions.add_unhook_wagon('add')
   when 8 then menu_actions.add_unhook_wagon('unhook')
-  when 9 then menu_actions.train_moving
-  when 10 then menu_actions.view_stations
-  when 11 then menu_actions.view_trains
-  when 12 then break
+  when 9 then menu_actions.occupy_seat_volume
+  when 10 then menu_actions.view_wagons
+  when 11 then menu_actions.train_moving
+  when 12 then menu_actions.view_stations
+  when 13 then menu_actions.view_trains
+  when 14 then break
   end
 end

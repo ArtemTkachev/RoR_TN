@@ -86,7 +86,9 @@ class Train
   end
 
   def validate!
-    raise 'Invalid train number!' if number !~ TRAIN_NUMBER_FORMAT
-    raise 'Invalid train type!' unless TRAIN_TYPE.include?(type)
+    errors = []
+    errors << 'Invalid train number!' if number !~ TRAIN_NUMBER_FORMAT
+    errors << 'Invalid train type!' unless TRAIN_TYPE.include?(type)
+    raise errors.join('.') unless errors.empty?
   end
 end

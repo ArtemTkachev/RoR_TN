@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'instance_counter'
+require_relative '../lib/instance_counter'
 
 # class Station
 class Station
   include InstanceCounter
   @@stations = []
+
+  STATION_NAME_FORMAT = /^\w+\s?\w+$/.freeze
 
   class << self
     def all
@@ -22,6 +24,7 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
+    validate!
     @@stations << self
     register_instance
   end
@@ -40,5 +43,15 @@ class Station
 
   def show_trains
     trains.each { |train| puts "#{train.number}  #{train.type}" }
+  end
+
+  def each_train(&block)
+    trains.each { |train| block.call(train) } if block_given?
+  end
+
+  protected
+
+  def validate!
+    raise 'Invalid station name!' if name !~ STATION_NAME_FORMAT
   end
 end

@@ -44,8 +44,10 @@ class Route
   end
 
   def validate!
-    raise 'Invalid route number!' if number !~ ROUTE_NUMBER_FORMAT
-    raise 'The start station is not set!' if @stations.first.nil?
-    raise 'The end station is not set!' if @stations.last.nil?
+    errors = []
+    errors << 'Invalid route number!' if number !~ ROUTE_NUMBER_FORMAT
+    errors << 'The start station is not set!' if @stations.first.nil?
+    errors << 'The end station is not set!' if @stations.last.nil?
+    raise errors.join('.') unless errors.empty?
   end
 end

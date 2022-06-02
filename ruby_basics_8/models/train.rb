@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-require_relative 'manufacturing_company'
-require_relative 'instance_counter'
+require_relative '../lib/manufacturing_company'
+require_relative '../lib/instance_counter'
 
 # class Train
 class Train
   include ManufacturingCompany
   include InstanceCounter
   @@trains = []
+  TRAIN_NUMBER_FORMAT = /^[0-9a-z]{3}-?[0-9a-z]{2}$/i.freeze
+  TRAIN_TYPE = %w[passenger cargo].freeze
 
   class << self
     def all
@@ -26,6 +28,7 @@ class Train
     @type = type
     @wagons = []
     @speed = 0
+    validate!
     @@trains << self
     register_instance
   end
@@ -60,6 +63,10 @@ class Train
     @current_station = previous_station
   end
 
+  def each_wagon(&block)
+    wagons.each { |wagon| block.call(wagon) } if block_given?
+  end
+
   # methods are only used inside an instance
   protected
 
@@ -80,5 +87,12 @@ class Train
     return if route.nil? || route.stations.first == current_station
 
     route.stations[route.stations.index(current_station) - 1]
+  end
+
+  def validate!
+    errors = []
+    errors << 'Invalid train number!' if number !~ TRAIN_NUMBER_FORMAT
+    errors << 'Invalid train type!' unless TRAIN_TYPE.include?(type)
+    raise errors.join('.') unless errors.empty?
   end
 end
