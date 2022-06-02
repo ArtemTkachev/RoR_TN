@@ -122,8 +122,8 @@ class MenuActions
 
     puts 'Wagons:'
     train.each_wagon do |wagon|
-      print "№:#{wagon.number} type:#{wagon.type} "
-      puts "#{wagon.type == 'pass' ? 'seats' : 'volume'} free & occupied:8#{wagon.free} #{wagon.occupied}"
+      condition_type = (wagon.type == 'pass' ? 'seats' : 'volume')
+      puts "№:#{wagon.number} type:#{wagon.type} #{condition_type} free & occupied:8#{wagon.free} #{wagon.occupied}"
     end
   end
 
@@ -205,13 +205,13 @@ class MenuActions
     train.wagons.each_with_index { |wagon, index| puts "#{index + 1} - ##{wagon.number} #{wagon.total} #{wagon.free}" }
     begin
       print 'Enter the serial number of wagon (1,2,3,..): '
-      number = gets.chomp.to_i
-      raise "This's not the serial number of the wagon!" unless number.between?(1..train.wagons.size)
+      number = gets.chomp
+      raise "This's not the serial number of the wagon!" if (number.is_a? Numeric) || number.between?(1..train.wagons.size)
     rescue RuntimeError => e
       puts e.message
       retry
     end
-    train.wagons[number - 1]
+    train.wagons[number.to_i - 1]
   end
 
   def train_data_entry
