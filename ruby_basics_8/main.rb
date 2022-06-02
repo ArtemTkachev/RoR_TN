@@ -13,7 +13,7 @@ loop do
     6 Assign a route to a train
     7 Add a wagon to a train
     8 Unhook a wagon from a train
-    9 Occupy_seat_volume
+    9 Take a seat or volume in the wagon
     10 View a list of wagons at a train
     11 Move a train (forward or backward)
     12 View a list of stations on a route

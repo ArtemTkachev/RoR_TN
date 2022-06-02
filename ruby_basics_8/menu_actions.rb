@@ -123,7 +123,7 @@ class MenuActions
     puts 'Wagons:'
     train.each_wagon do |wagon|
       print "№:#{wagon.number} type:#{wagon.type} "
-      puts "#{wagon.type == 'pass' ? 'seats' : 'volume'} free & occupied:'#{wagon.free} #{wagon.occupied}"
+      puts "#{wagon.type == 'pass' ? 'seats' : 'volume'} free & occupied:8#{wagon.free} #{wagon.occupied}"
     end
   end
 
@@ -206,7 +206,7 @@ class MenuActions
     begin
       print 'Enter the serial number of wagon (1,2,3,..): '
       number = gets.chomp.to_i
-      raise "This's not the serial number of the wagon!" unless number.between(1..train.wagons.size)
+      raise "This's not the serial number of the wagon!" unless number.between?(1..train.wagons.size)
     rescue RuntimeError => e
       puts e.message
       retry
