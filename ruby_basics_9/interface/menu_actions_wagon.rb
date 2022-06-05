@@ -33,8 +33,10 @@ module MenuActionsWagon
     when :cargo
       print 'Enter the loaded volume in cubic meters: '
       wagon.occupy(gets.chomp.to_i)
+      puts 'The specified volume is loaded!'
     when :passenger
       wagon.occupy
+      puts 'The seat is occupied!'
     end
   end
 
