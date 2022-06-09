@@ -9,6 +9,16 @@ s_fth = Station.new('fourth')
 s_ff = Station.new('fifth')
 s_sx = Station.new('sixth')
 
+s_f.traffic = 234_000
+s_f.traffic = 256_000
+s_f.temperature = 25
+s_f.temperature = 28
+s_f.owner = 'Mr Gilmor'
+puts s_f.instance_variables.inspect
+puts s_f.traffic
+puts s_f.temperature_history
+puts s_f.owner
+
 r = Route.new('1A', s_f, s_sx)
 r.add_intermediate_station(s_s)
 r.delete_intermediate_station(s_s)
@@ -19,8 +29,8 @@ r.add_intermediate_station(s_ff)
 w1 = PassengerWagon.new('234456SD', 20)
 w2 = CargoWagon.new('234456SG', 80)
 
-puts w1.occupy
-puts w2.occupy(45)
+# puts w1.occupy
+# puts w2.occupy(45)
 
 w3 = PassengerWagon.new('234456SK', 33)
 w4 = CargoWagon.new('234456SL', 85)

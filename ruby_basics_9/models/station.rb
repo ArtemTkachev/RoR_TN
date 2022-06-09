@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 require_relative '../lib/instances'
+require_relative '../lib/accessors'
+require_relative '../lib/validation'
 
 # class Station
 class Station
   include Instances
+  include Validation
+  extend Accessors
   STATION_NAME_FORMAT = /^\w+\s?\w+$/.freeze
 
   class << self
@@ -14,6 +18,14 @@ class Station
   end
 
   attr_reader :name, :trains
+
+  attr_accessor_with_history :traffic, :temperature
+
+  strong_attr_accessor :owner, String
+
+  validate :name, :presence
+  validate :name, :type, String
+  validate :name, :format, STATION_NAME_FORMAT
 
   def initialize(name)
     @name = name
@@ -45,11 +57,5 @@ class Station
 
   def to_s
     name.to_s
-  end
-
-  protected
-
-  def validate!
-    raise 'Invalid station name!' if name !~ STATION_NAME_FORMAT
   end
 end

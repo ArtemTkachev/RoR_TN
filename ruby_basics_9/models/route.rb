@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 require_relative '../lib/instances'
+require_relative '../lib/validation'
 
 # class Route
 class Route
   include Instances
+  include Validation
 
   ROUTE_NUMBER_FORMAT = /^\d{1,3}[A-Z]{1}$/.freeze
 
   attr_reader :number, :stations
+
+  validate :number, :presence
+  validate :number, :type, String
+  validate :number, :format, ROUTE_NUMBER_FORMAT
 
   def initialize(number, start_station, end_station)
     @number = number
@@ -16,6 +22,7 @@ class Route
     @stations << start_station
     @stations << end_station
     validate!
+    validate_stations!
     add_instance
     register_instance
   end
@@ -38,9 +45,8 @@ class Route
 
   protected
 
-  def validate!
+  def validate_stations!
     errors = []
-    errors << 'Invalid route number!' if number !~ ROUTE_NUMBER_FORMAT
     errors << 'The start station is not set!' if @stations.first.nil?
     errors << 'The end station is not set!' if @stations.last.nil?
     raise errors.join('.') unless errors.empty?
