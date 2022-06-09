@@ -24,7 +24,7 @@ module Validation
     def valid?
       validate!
       true
-    rescue RuntimeError => e
+    rescue RuntimeError
       false
     end
 
