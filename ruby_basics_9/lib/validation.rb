@@ -17,11 +17,6 @@ module Validation
       value = { attr_name: attr_name, valid_type: valid_type, parameter: parameter }
       instance_variable_set(:@validation_list, (instance_variable_get(:@validation_list) || []) << value)
     end
-
-    def inherited(subclass)
-      subclass.instance_variable_set(:@validate_list, @validate_list)
-      super
-    end
   end
 
   # module InstanceMethods
