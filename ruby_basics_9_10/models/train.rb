@@ -25,6 +25,7 @@ class Train
     @wagons = []
     @speed = 0
     validate!
+    validate_type!
     add_instance
     register_instance
   end
@@ -89,9 +90,8 @@ class Train
     route.stations[route.stations.index(current_station) - 1]
   end
 
-  def validate!
+  def validate_type!
     errors = []
-    errors << 'Invalid train number!' if number !~ TRAIN_NUMBER_FORMAT
     errors << 'Invalid train type!' unless TRAIN_TYPE.include?(type)
     raise errors.join('.') unless errors.empty?
   end
