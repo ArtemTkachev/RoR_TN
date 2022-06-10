@@ -9,6 +9,8 @@ s_fth = Station.new('fourth')
 s_ff = Station.new('fifth')
 s_sx = Station.new('sixth')
 
+s_f.valid?
+
 s_f.traffic = 234_000
 s_f.traffic = 256_000
 s_f.temperature = 25
