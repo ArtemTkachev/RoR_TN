@@ -2,16 +2,22 @@
 
 require_relative '../lib/manufacturing_company'
 require_relative '../lib/instances'
+require_relative '../lib/validation'
 
 # class Train
 class Train
   include ManufacturingCompany
+  include Validation
   include Instances
   TRAIN_NUMBER_FORMAT = /^[0-9a-z]{3}-?[0-9a-z]{2}$/i.freeze
   TRAIN_TYPE = %i[passenger cargo].freeze
   TRAIN_MOVE_DIRECTION = %i[forward backward].freeze
 
   attr_reader :number, :type, :wagons
+
+  validate :number, :presence
+  validate :number, :type, String
+  validate :number, :format, TRAIN_NUMBER_FORMAT
 
   def initialize(number, type)
     @number = number
