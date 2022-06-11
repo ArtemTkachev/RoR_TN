@@ -10,12 +10,14 @@ module Validation
   # module ClassMethods
   module ClassMethods
     def validation_list
-      instance_variable_get(:@validation_list)
+      @validation_list
+      # instance_variable_get(:@validation_list)
     end
 
     def validate(attr_name, valid_type, parameter = nil)
       value = { attr_name: attr_name, valid_type: valid_type, parameter: parameter }
-      instance_variable_set(:@validation_list, (instance_variable_get(:@validation_list) || []) << value)
+      (@validation_list ||= []) << value
+      # instance_variable_set(:@validation_list, (instance_variable_get(:@validation_list) || []) << value)
     end
   end
 
@@ -30,8 +32,12 @@ module Validation
 
     protected
 
+    def source
+      self.class.superclass == Object ? self.class : self.class.superclass
+    end
+
     def validate!
-      self.class.validation_list.each do |attr|
+      source.validation_list.each do |attr|
         validation(send(attr[:attr_name]), attr[:attr_name], attr[:valid_type], attr[:parameter])
       end
     end
