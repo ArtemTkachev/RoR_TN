@@ -28,6 +28,7 @@ r.add_intermediate_station(s_s)
 r.add_intermediate_station(s_th)
 r.add_intermediate_station(s_fth)
 r.add_intermediate_station(s_ff)
+w0 = CargoBigWagon.new('456789GF', 44)
 w1 = PassengerWagon.new('234456SD', 20)
 w2 = CargoWagon.new('234456SG', 80)
 

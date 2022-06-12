@@ -12,6 +12,9 @@ module MenuActionsStation
     print 'Enter the station name: '
     Station.new(gets.chomp)
     puts 'The station has been successfully created!'
+  rescue RuntimeError => e
+    puts e
+    retry
   end
 
   def view_trains

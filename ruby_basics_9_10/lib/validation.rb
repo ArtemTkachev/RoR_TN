@@ -33,7 +33,9 @@ module Validation
     protected
 
     def source
-      self.class.superclass == Object ? self.class : self.class.superclass
+      source = self.class
+      source = source.superclass until source.superclass == Object
+      source
     end
 
     def validate!
@@ -43,11 +45,9 @@ module Validation
     end
 
     def validation(attr, name, type, parameter)
-      errors = []
-      errors << "#{name} cannot be equal to nil or empry!" if type == :presence && (attr.nil? || attr == '')
-      errors << "#{name} does not match the format!" if type == :format && attr !~ parameter
-      errors << "#{name} does not match the specified class!" if type == :type && !attr.instance_of?(parameter)
-      raise errors.join("\n") unless errors.empty?
+      raise "#{name} cannot be equal to nil or empry!" if type == :presence && (attr.nil? || attr == '')
+      raise "#{name} does not match the format!" if type == :format && attr !~ parameter
+      raise "#{name} does not match the specified class!" if type == :type && !attr.instance_of?(parameter)
     end
   end
 end
