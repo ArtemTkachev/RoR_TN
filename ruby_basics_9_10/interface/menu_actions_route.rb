@@ -17,6 +17,9 @@ module MenuActionsRoute
     end_station = data_selection(:station)
     Route.new(route_number, start_station, end_station)
     puts 'The route has been successfully created!'
+  rescue RuntimeError => e
+    puts e
+    retry
   end
 
   def view_stations

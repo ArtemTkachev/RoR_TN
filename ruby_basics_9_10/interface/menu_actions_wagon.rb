@@ -19,6 +19,9 @@ module MenuActionsWagon
     wagon = enter_total_quantity(train.type, wagon_number)
     train.attach_wagon(wagon)
     puts 'The wagon is attached to the train!'
+  rescue RuntimeError => e
+    puts e
+    retry
   end
 
   def unhook_wagon

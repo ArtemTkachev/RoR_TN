@@ -45,6 +45,7 @@ module Validation
     end
 
     def validation(attr, name, type, parameter)
+      name = name.to_s.capitalize
       raise "#{name} cannot be equal to nil or empry!" if type == :presence && (attr.nil? || attr == '')
       raise "#{name} does not match the format!" if type == :format && attr !~ parameter
       raise "#{name} does not match the specified class!" if type == :type && !attr.instance_of?(parameter)

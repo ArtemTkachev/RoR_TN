@@ -19,6 +19,9 @@ module MenuActionsTrain
     train_type = data_selection(:traintype, %i[passenger cargo])
     TRAIN_CLASSES[train_type].new(train_number)
     puts 'The train has been successfully created!'
+  rescue RuntimeError => e
+    puts e
+    retry
   end
 
   def assign_route
