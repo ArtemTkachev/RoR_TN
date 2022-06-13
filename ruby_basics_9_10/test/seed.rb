@@ -2,12 +2,12 @@
 
 Dir['../models/*.rb'].sort!.each { |file| require_relative file }
 
-s_f = Station.new('first'); puts '1s'
-s_s = Station.new('second'); puts '2s'
-s_th = Station.new('third'); puts '3s'
-s_fth = Station.new('fourth'); puts '4s'
-s_ff = Station.new('fifth'); puts '5s'
-s_sx = Station.new('sixth'); puts '6s'
+s_f = Station.new('first')
+s_s = Station.new('second')
+s_th = Station.new('third')
+s_fth = Station.new('fourth')
+s_ff = Station.new('fifth')
+s_sx = Station.new('sixth')
 
 s_f.valid?
 

@@ -50,7 +50,7 @@ module Menu
       puts MENU_STR
       print 'Enter the number of the menu item: '
       answer = gets.chomp.to_i
-      break if MENU_ACTIONS_SELECT.size + 1 == answer
+      break if !(1..MENU_ACTIONS_SELECT.size + 1).include?(answer) || MENU_ACTIONS_SELECT.size + 1 == answer
 
       send(MENU_ACTIONS_SELECT[answer - 1])
     end
